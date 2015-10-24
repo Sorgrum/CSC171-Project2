@@ -25,6 +25,12 @@ public class FootballPlays {
 		if (kickingTeam.equals(homeTeam)) {
 			// The home team starts at the 35 yard line
 			field.setLineOfScrimmage(35);
+		} else {
+			field.setLineOfScrimmage(field.scorablefieldLength - 35);
+		}
+
+		for (int i = 0; i < 10; i++) {
+			System.out.println(ChanceCalc.randomNumber(40, 80));
 		}
 	}
 

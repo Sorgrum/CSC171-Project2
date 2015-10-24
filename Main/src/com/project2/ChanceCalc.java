@@ -31,10 +31,15 @@ public class ChanceCalc {
 
 		// Generate a random number between 0-1, so you have a 50/50 chance
 		if (Math.random() >= 0.5) {
-			return "heads";
+			return "h";
 		} else {
-			return "tails";
+			return "t";
 		}
+	}
+
+	public static int randomNumber(int start, int end) {
+		Random rn = new Random();
+		return rn.nextInt(end - start) + start;
 	}
 
 }

@@ -66,14 +66,15 @@ public class FootballGame {
 		String coinFace = input.nextLine();
 
 		// Did the user win the coin toss
-		if (coinFace.equalsIgnoreCase(ChanceCalc.coinToss())) {
+		if (ChanceCalc.coinToss().toLowerCase().startsWith(coinFace)) {
 
-			System.out.println("It's " + coinFace + ", \n[kick/receive] Do you want to kick or receive?");
+			System.out.println("You won the coin toss.");
+			System.out.println("[kick/receive] Do you want to kick or receive?");
 			String kickReceivePreference = input.nextLine();
 
-			if (kickReceivePreference.equalsIgnoreCase("kick")) {
+			if (kickReceivePreference.toLowerCase().startsWith("k")) {
 				setFirstReceiver(awayTeam);
-			} else if (kickReceivePreference.equalsIgnoreCase("receive")) {
+			} else if (kickReceivePreference.toLowerCase().startsWith("r")) {
 				setFirstReceiver(homeTeam);
 			} else {
 				System.out.println("Invalid input.");
