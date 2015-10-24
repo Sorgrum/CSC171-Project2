@@ -1,4 +1,5 @@
-package com.project2;/*
+package com.project2;
+/**
 *
 * Student Name: Marcelo Gheiler
 * Filename: Main.java
@@ -17,35 +18,22 @@ import java.util.Scanner;
 
 public class FootballGame {
 
-	Scanner input = new Scanner(System.in);
-	FootballField field = new FootballField();
-	ComputerLogic computer = new ComputerLogic();
-
 	protected FootballTeam homeTeam, awayTeam;
+	protected FootballTeam firstReceiver, firstKicker;
 
-	protected int quarterLength;
-	protected int secondsRemaining;
 
 	protected int homeScore;
 	protected int awayScore;
 
 	protected FootballTeam leftTeam, rightTeam;
 
+	Scanner input = new Scanner(System.in);
+	FootballField field = new FootballField();
+	FootballPlays plays = new FootballPlays(homeTeam, awayTeam, field);
+	ComputerLogic computer = new ComputerLogic();
 
-	/**
-	 * Get the amount of seconds left in the quarter
-	 */
-	public int getTimeLeft() {
-		return secondsRemaining;
-	}
 
-	/**
-	 * Set the amount of seconds in each quarter
-	 */
-	public void setTimePerQuarter(int quarterLength) {
-		// Convert the quarter length from minutes to seconds
-		secondsRemaining = quarterLength * 60;
-	}
+
 
 
 	/**
@@ -71,10 +59,10 @@ public class FootballGame {
 		int quarterLength = input.nextInt();
 		// Add a nextLine to eat \n in buffer
 		input.nextLine();
-		setTimePerQuarter(quarterLength);
+		field.setTimePerQuarter(quarterLength);
 
 
-		System.out.println("Heads or Tails?");
+		System.out.println("Coin toss to decide who goes first. Heads or Tails?");
 		String coinFace = input.nextLine();
 
 		// Did the user win the coin toss
@@ -84,33 +72,38 @@ public class FootballGame {
 			String kickReceivePreference = input.nextLine();
 
 			if (kickReceivePreference.equalsIgnoreCase("kick")) {
-				initialKickoff(awayTeam, homeTeam);
+				setFirstReceiver(awayTeam);
 			} else if (kickReceivePreference.equalsIgnoreCase("receive")) {
-				initialKickoff(homeTeam, awayTeam);
+				setFirstReceiver(homeTeam);
 			} else {
 				System.out.println("Invalid input.");
 			}
 
 		} else {
 			System.out.println("You didn't win the coin toss");
-			if (computer.wantsToRecieve()) {
+			if (computer.wantsToReceive()) {
 				System.out.println("The " + awayTeam.getName() + " have decided to receive the ball");
 
 				// The kick will go from the home team to the away team
-				initialKickoff(awayTeam, homeTeam);
+				setFirstReceiver(awayTeam);
 			} else {
 				System.out.println("The " + awayTeam.getName() + " have decided to kick the ball");
+				setFirstReceiver(homeTeam);
 			}
 		}
 
 		for (int i = 1; i <= 4; i++) {
+
+			// Whoever chooses to receive first does so in the first and third quarters because during the second and
+			// fourth the team that received first now kicks
+			if (i == 1 || i == 3) {
+				plays.initialKickoff(field, getFirstKicker(), getFirstReceiver());
+			} else {
+				plays.initialKickoff(field, getFirstReceiver(), getFirstKicker());
+			}
 			playQuarter(i);
 		}
 		reportWinner();
-	}
-
-	protected void initialKickoff(FootballTeam reciever, FootballTeam kickers) {
-		// TODO Make the ball go a distance between 40-80 yards
 	}
 
 	/**
@@ -118,13 +111,11 @@ public class FootballGame {
 	 * Quarters last 15 minutes and end after the play during which the time
 	 * runs out.
 	 */
-	protected void playQuarter(int quaterLength) {
-
-		/*this.quarterLength = quaterLength;
-		secondsRemaining = 15 * 60;
-		while (secondsRemaining > 0) {
+	protected void playQuarter(int quarterNumber) {
+		while (field.getSecondsRemaining() > 0) {
 			playAPlay();
-		}*/
+			field.updateState();
+		}
 	}
 
 	/**
@@ -141,5 +132,28 @@ public class FootballGame {
 		// Compute outcome and update state (including clock)
 	}
 
+
+	public void setFirstReceiver(FootballTeam firstReceiver) {
+		if (firstReceiver.equals(homeTeam)) {
+			firstKicker = awayTeam;
+		} else {
+			firstKicker = homeTeam;
+			setFirstKicker(firstKicker);
+		}
+
+		this.firstReceiver = firstReceiver;
+	}
+
+	public FootballTeam getFirstReceiver() {
+		return firstReceiver;
+	}
+
+	public void setFirstKicker(FootballTeam firstKicker) {
+		this.firstKicker = firstKicker;
+	}
+
+	public FootballTeam getFirstKicker() {
+		return firstKicker;
+	}
 }
 

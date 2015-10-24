@@ -13,7 +13,7 @@ package com.project2;
  */
 public class ComputerLogic {
 
-	public Boolean wantsToRecieve() {
+	public Boolean wantsToReceive() {
 		// Give the computer a 75% chance to want to receive, because it's normally beneficial to want to receive first
 		return ChanceCalc.outCome(75);
 	}
