@@ -18,7 +18,8 @@ public class FootballTeam {
 	 * The name of this FootballTeam.
 	 */
 	protected String name;
-
+    protected Boolean isOffense;
+    protected Boolean isDefense;
 	/**
 	 * Construct and return a new FootballTeam with the given name.
 	 */
@@ -33,4 +34,11 @@ public class FootballTeam {
 		return name;
 	}
 
+    public Boolean getIsOffense() {
+        return isOffense;
+    }
+
+    public void setIsOffense(Boolean isOffense) {
+        this.isOffense = isOffense;
+    }
 }

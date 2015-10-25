@@ -56,17 +56,19 @@ public class FootballGame {
 
 
 		System.out.print("How long should each game quarter be (in minutes)? ");
-		int quarterLength = input.nextInt();
-		// Add a nextLine to eat \n in buffer
-		input.nextLine();
-		field.setTimePerQuarter(quarterLength);
-
+        while (!input.hasNextInt()) {
+            input.next(); // Read and discard offending non-int input
+            System.out.print("Please enter an the value in minutes: "); // Re-prompt
+        }
+        int quarterLength = input.nextInt();
+        // Add a nextLine to eat \n in buffer
+        input.nextLine();
 
 		System.out.println("Coin toss to decide who goes first. Heads or Tails?");
 		String coinFace = input.nextLine();
 
 		// Did the user win the coin toss
-		if (ChanceCalc.coinToss().toLowerCase().startsWith(coinFace)) {
+		if (coinFace.toLowerCase().startsWith(ChanceCalc.coinToss())) {
 
 			System.out.println("You won the coin toss.");
 			System.out.println("[kick/receive] Do you want to kick or receive?");
@@ -74,8 +76,14 @@ public class FootballGame {
 
 			if (kickReceivePreference.toLowerCase().startsWith("k")) {
 				setFirstReceiver(awayTeam);
+
+                awayTeam.setIsOffense(false);
+                homeTeam.setIsOffense(true);
 			} else if (kickReceivePreference.toLowerCase().startsWith("r")) {
 				setFirstReceiver(homeTeam);
+
+                awayTeam.setIsOffense(true);
+                homeTeam.setIsOffense(false);
 			} else {
 				System.out.println("Invalid input.");
 			}
@@ -87,9 +95,13 @@ public class FootballGame {
 
 				// The kick will go from the home team to the away team
 				setFirstReceiver(awayTeam);
+                awayTeam.setIsOffense(true);
+                homeTeam.setIsOffense(false);
 			} else {
 				System.out.println("The " + awayTeam.getName() + " have decided to kick the ball");
 				setFirstReceiver(homeTeam);
+                awayTeam.setIsOffense(false);
+                homeTeam.setIsOffense(true);
 			}
 		}
 

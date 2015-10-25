@@ -14,15 +14,22 @@ package com.project2;
 public class FootballField {
 
 	protected int fieldLength;
-	protected int scorablefieldLength;
+	protected int scorableFieldLength;
 
 	protected int lineOfScrimmage;
 	protected int firstDownLine;
+    protected  int currentDown;
 
-	protected int quarterLength;
+    protected int quarterLength;
 	protected int secondsRemaining;
 
+    protected FootballTeam offensiveTeam;
+    protected FootballTeam defensiveTeam;
+
 	public void setLineOfScrimmage(int lineOfScrimmage) {
+        if (getCurrentDown() == 1) {
+            setFirstDownLine(lineOfScrimmage + 10);
+        }
 		this.lineOfScrimmage = lineOfScrimmage;
 	}
 
@@ -39,11 +46,14 @@ public class FootballField {
 	}
 
 	public int getFieldLength() {
+		// The field consists of the 100 yards of actual field and 10 yards on either side for the end zones
+		fieldLength = 120;
 		return fieldLength;
 	}
 
-	public int getScorablefieldLength() {
-		return scorablefieldLength;
+	public int getScorableFieldLength() {
+		scorableFieldLength = 100;
+		return scorableFieldLength;
 	}
 
 	public int getSecondsRemaining() {
@@ -68,4 +78,42 @@ public class FootballField {
 	public void updateState() {
 
 	}
+
+    public int getCurrentDown() {
+        return currentDown;
+    }
+
+    public String getCurrentDownWithOrdinal() {
+        switch (currentDown) {
+            case 1:
+                return "1st";
+            case 2:
+                return "2nd";
+            case 3:
+                return "3rd";
+            case 4:
+                return "4th";
+            default:
+                return "Field Error: Invalid down number.";
+        }
+    }
+    public void setCurrentDown(int currentDown) {
+        this.currentDown = currentDown;
+    }
+
+    public FootballTeam getOffensiveTeam() {
+        return offensiveTeam;
+    }
+
+    public void setOffensiveTeam(FootballTeam offensiveTeam) {
+        this.offensiveTeam = offensiveTeam;
+    }
+
+    public FootballTeam getDefensiveTeam() {
+        return defensiveTeam;
+    }
+
+    public void setDefensiveTeam(FootballTeam defensiveTeam) {
+        this.defensiveTeam = defensiveTeam;
+    }
 }

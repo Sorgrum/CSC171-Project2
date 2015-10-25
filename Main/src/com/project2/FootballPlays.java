@@ -22,16 +22,42 @@ public class FootballPlays {
 
 	public void initialKickoff(FootballField field, FootballTeam kickingTeam, FootballTeam receivingTeam) {
 
-		if (kickingTeam.equals(homeTeam)) {
+		if (kickingTeam.equals(awayTeam)) {
 			// The home team starts at the 35 yard line
-			field.setLineOfScrimmage(35);
+			field.setLineOfScrimmage(field.getScorableFieldLength() - 35);
 		} else {
-			field.setLineOfScrimmage(field.scorablefieldLength - 35);
+			field.setLineOfScrimmage(35);
 		}
 
-		for (int i = 0; i < 10; i++) {
-			System.out.println(ChanceCalc.randomNumber(40, 80));
-		}
+        // Calculate how far the ball travels, between 40 and 80 yards
+        int distance = ChanceCalc.randomNumber(40, 80);
+        field.setCurrentDown(1);
+
+        // The ball will be kicked either into the opposition's end zone, resulting in a touchback, which rewards no
+        // points but the offensive team starts at their 20 yard line, or the ball will be played wherever it lands
+        if (distance >= 65) {
+
+            System.out.println("The kick traveled from the " + field.getLineOfScrimmage() + " to the end zone for a touchback.");
+
+            if (kickingTeam.equals(awayTeam)) {
+                field.setLineOfScrimmage(20);
+            } else {
+                field.setLineOfScrimmage(80);
+            }
+        } else {
+            System.out.println("The kick traveled " + distance + " yards.");
+            if (kickingTeam.equals(awayTeam)) {
+                // The ball starts at the away team's 35 yard line--which is the 65 yard line-- and moves in the
+                // negative direction
+                field.setLineOfScrimmage(65 - distance);
+
+            } else {
+                // The ball starts at the 35 yard line and moves the distance in the positive direction
+                field.setLineOfScrimmage(35 + distance);
+            }
+        }
+        System.out.println("The offense will start at the " + field.getLineOfScrimmage() + " yard line on its " +
+                field.getCurrentDownWithOrdinal() + " down.");
 	}
 
 }
