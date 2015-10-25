@@ -56,35 +56,45 @@ public class FootballGame {
 	public void startGame() {
 
 
-		System.out.print("How long should each game quarter be (in minutes)? ");
+		System.out.print("[1-60] How long should each game quarter be (in minutes)? ");
         while (!input.hasNextInt()) {
             input.next(); // Read and discard offending non-int input
-            System.out.print("Please enter an the value in minutes: "); // Re-prompt
+            System.out.print("[1-60] Please enter a quarter length in minutes: "); // Re-prompt
         }
+
         int quarterLength = input.nextInt();
+
+        // Force the user input to actually be what we are expecting.
+        if (quarterLength < 1) {
+            quarterLength = 1;
+        } else if (quarterLength > 60) {
+            quarterLength = 60;
+        }
+
+        field.setQuarterLength(quarterLength);
         // Add a nextLine to eat \n in buffer
         input.nextLine();
 
-		System.out.println("Coin toss to decide who goes first. Heads or Tails?");
+		System.out.print("[heads/tails] Coin toss to decide who goes first. Heads or Tails? ");
 		String coinFace = input.nextLine();
 
 		// Did the user win the coin toss
 		if (coinFace.toLowerCase().startsWith(ChanceCalc.coinToss())) {
 
 			System.out.println("You won the coin toss.");
-			System.out.println("[kick/receive] Do you want to kick or receive?");
+			System.out.print("[kick/receive] Do you want to kick or receive?");
 			String kickReceivePreference = input.nextLine();
 
 			if (kickReceivePreference.toLowerCase().startsWith("k")) {
 				setFirstReceiver(awayTeam);
 
-                awayTeam.setIsOffense(false);
-                homeTeam.setIsOffense(true);
+                awayTeam.setIsOffense(true);
+                homeTeam.setIsOffense(false);
 			} else if (kickReceivePreference.toLowerCase().startsWith("r")) {
 				setFirstReceiver(homeTeam);
 
-                awayTeam.setIsOffense(true);
-                homeTeam.setIsOffense(false);
+                awayTeam.setIsOffense(false);
+                homeTeam.setIsOffense(true);
 			} else {
 				System.out.println("Invalid input.");
 			}
@@ -101,12 +111,14 @@ public class FootballGame {
 			} else {
 				System.out.println("The " + awayTeam.getName() + " have decided to kick the ball");
 				setFirstReceiver(homeTeam);
+
                 awayTeam.setIsOffense(false);
                 homeTeam.setIsOffense(true);
 			}
 		}
 
-		for (int i = 1; i <= 4; i++) {
+        turnoverOnDowns();
+		/*for (int i = 1; i <= 4; i++) {
 
 			// Whoever chooses to receive first does so in the first and third quarters because during the second and
 			// fourth the team that received first now kicks
@@ -116,7 +128,13 @@ public class FootballGame {
 				plays.initialKickoff(field, getFirstReceiver(), getFirstKicker());
 			}
 			playQuarter(i);
-		}
+		}*/
+
+        //////////////////////////////////////////////////////////////////////////
+        // FOR TESTING ONLY                                                     //
+            plays.initialKickoff(field, getFirstKicker(), getFirstReceiver());  //
+            playQuarter(1);                                                     //
+        //////////////////////////////////////////////////////////////////////////
 		reportWinner();
 	}
 
@@ -126,21 +144,26 @@ public class FootballGame {
 	 * runs out.
 	 */
 	protected void playQuarter(int quarterNumber) {
-		while (field.getSecondsRemaining() > 0) {
+        field.setCurrentQuarter(quarterNumber);
+        /*while (field.getSecondsRemaining() > 0) {
 			playAPlay();
 			field.updateState();
-		}
+		}*/
+        playAPlay();
 	}
 
 	/**
 	 * Report the winner of this com.project2.FootballGame, assuming it is over.
 	 */
 	protected void reportWinner() {
-
-	}
+        System.out.println();
+    }
 
 	protected void playAPlay() {
-		// TODO
+        field.considerPlayTime();
+        System.out.println(field.getSecondsRemainingFormatted() + " remaining in the " + field
+                .getCurrentQuarterAsText() + " quarter.");
+        // TODO
 		// Pick away team play (usually computer)
 		// Pick home team play (usually ask user)
 		// Compute outcome and update state (including clock)
@@ -169,5 +192,14 @@ public class FootballGame {
 	public FootballTeam getFirstKicker() {
 		return firstKicker;
 	}
+
+    protected  void turnoverOnDowns() {
+        if (homeTeam.getIsOffense()) {
+            System.out.println("You are on the offense.");
+        } else {
+            System.out.println("You are on defense");
+        }
+        field.setCurrentDown(1);
+    }
 }
 
