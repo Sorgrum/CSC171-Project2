@@ -179,11 +179,12 @@ public class FootballGame {
     }
 
 	protected void playAPlay() {
+        field.updateState();
         field.considerPlayTime();
         System.out.println(field.getSecondsRemainingFormatted() + " remaining in the " + field
                 .getCurrentQuarterAsText() + " quarter.");
         System.out.println("The ball is on the " + field.getLineOfScrimmage() + " yard line. " + field
-                .getCurrentDownAsTextCapitalized() + " down and " + field.getFirstLineDistance() + " to go.");
+                .getCurrentDownAsTextCapitalized() + " down and " + field.getFirstDownLineDistance() + " to go.");
         if (homeTeam.getIsOffense()) {
             System.out.print("[run/pass/punt/fg] " + homeTeam.getName() + " offensive play: ");
             field.setCurrentOffensivePlay(input.nextLine());
@@ -192,12 +193,14 @@ public class FootballGame {
             System.out.print("[run/pass/blitz/kick] " + homeTeam.getName() + " defensive play: ");
             field.setCurrentDefensivePlay(input.nextLine());
             field.setCurrentOffensivePlay(computer.choosePlay("OFFENSIVE", field));
+            System.out.println();
         }
         field.computePlayOutcome();
         // TODO
 		// Pick away team play (usually computer)
 		// Pick home team play (usually ask user)
 		// Compute outcome and update state (including clock)
+
 	}
 
 
