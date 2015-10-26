@@ -19,7 +19,7 @@ import java.util.Random;
  */
 public class ChanceCalc {
 
-	public static Boolean outCome(int percentage) {
+	public static Boolean outCome(double percentage) {
 		Random rn = new Random();
 		int randInt = rn.nextInt(100) + 1;
 

@@ -14,19 +14,21 @@ package com.project2;
 public class FootballPlays {
 
 	FootballTeam homeTeam, awayTeam;
+    FootballField field;
 
 	public FootballPlays(FootballTeam homeTeam, FootballTeam awayTeam, FootballField field) {
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
+        this.field = field;
 	}
 
 	public void initialKickoff(FootballField field, FootballTeam kickingTeam, FootballTeam receivingTeam) {
 
-		if (!receivingTeam.equals(awayTeam)) {
+		if (receivingTeam.equals(homeTeam)) {
 			// The home team starts at the 35 yard line
-			field.setLineOfScrimmage(field.getScorableFieldLength() - 35);
+            field.setLineOfScrimmage(35);
 		} else {
-			field.setLineOfScrimmage(35);
+            field.setLineOfScrimmage(field.getScorableFieldLength() - 35);
 		}
 
         // Calculate how far the ball travels, between 40 and 80 yards
@@ -39,14 +41,14 @@ public class FootballPlays {
 
             System.out.println("The kick traveled from the " + field.getLineOfScrimmage() + " to the end zone for a touchback.");
 
-            if (!receivingTeam.equals(awayTeam)) {
+            if (receivingTeam.equals(homeTeam)) {
                 field.setLineOfScrimmage(20);
             } else {
                 field.setLineOfScrimmage(80);
             }
-        } else {
+        } else if (distance < 65) {
             System.out.println("The kick traveled " + distance + " yards.");
-            if (!receivingTeam.equals(awayTeam)) {
+            if (receivingTeam.equals(homeTeam)) {
                 // The ball starts at the away team's 35 yard line--which is the 65 yard line-- and moves in the
                 // negative direction
                 field.setLineOfScrimmage(65 - distance);
@@ -59,6 +61,14 @@ public class FootballPlays {
         System.out.println("The offense will start at the " + field.getLineOfScrimmage() + " yard line on its " +
                 field.getCurrentDownWithOrdinal() + " down.");
         System.out.println();
+
+        if (field.getOffensiveTeam().equals(homeTeam)) {
+            System.out.println("You are on the offense.");
+            System.out.println();
+        } else {
+            System.out.println("You are on defense");
+            System.out.println();
+        }
     }
 
 }

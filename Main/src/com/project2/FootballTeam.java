@@ -20,6 +20,8 @@ public class FootballTeam {
 	protected String name;
     protected Boolean isOffense;
     protected Boolean isDefense;
+    protected int score = 0;
+
 	/**
 	 * Construct and return a new FootballTeam with the given name.
 	 */
@@ -40,5 +42,9 @@ public class FootballTeam {
 
     public void setIsOffense(Boolean isOffense) {
         this.isOffense = isOffense;
+    }
+
+    public void changeScore(int score) {
+        this.score += score;
     }
 }
